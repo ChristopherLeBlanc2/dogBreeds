@@ -7,6 +7,7 @@ const App = () => {
   const [breeds, setBreeds] = useState();
   const [allBreeds, setAllBreeds] = useState()
   const [subBreeds, setSubBreeds] = useState()
+  const [subBreedPics, setSubBreedPics] = useState()
 
 
   useEffect(() => {
@@ -21,17 +22,31 @@ const App = () => {
       });
   }, []);
 
+  const getSubBreedPics = (value, sub) => {
+    // console.log('value: ', sub)
+    axios.get(`https://dog.ceo/api/breed/${value}/${sub}/images`)
+    .then((data) => {
+      setSubBreedPics(data.data.message)
+
+    })
+    .catch((err) => {
+      console.log(err, 'err');
+    });
+  }
+
+  console.log('pics', subBreedPics)
+
 if (breeds) {
   return (
     <div className='App'>
       <Accordion variant="contained" defaultValue="customization" >
-    {breeds.map((breed) => {
+    {breeds.map((breed, index) => {
       return (
-          <Accordion.Item value={breed} >
+          <Accordion.Item value={breed} key={index} >
             <Accordion.Control>{breed}</Accordion.Control>
             <Accordion.Panel >
-              {subBreeds[breeds.indexOf(breed)].map((sub) => {
-                return <li>{sub}</li>
+              {subBreeds[breeds.indexOf(breed)].map((sub, index) => {
+                return <li key={index} onClick={() => {getSubBreedPics(breed, sub)}} >{sub}</li>
               })}
             </Accordion.Panel>
           </Accordion.Item>
